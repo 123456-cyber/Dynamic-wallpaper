@@ -31,6 +31,9 @@ private slots:
 
     void on_pushButton_3_clicked();             //取消应用动态壁纸
 
+
+    void on_horizontalSlider_valueChanged(int value); //调节音量
+
 private:
     Ui::Widget *ui;
     QString path="";             //文件路径

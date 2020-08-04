@@ -1,5 +1,7 @@
 #include "widget.h"
 #include "ui_widget.h"
+#include<QMessageBox>
+#include<QCloseEvent>
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
@@ -12,6 +14,9 @@ Widget::Widget(QWidget *parent)
 
     //设置声音默认为开启
     ui->checkBox->setCheckState(Qt::Checked);
+    //默认音量为50%
+    play->setVolume(50);
+    ui->horizontalSlider->setValue(50);
 
     //开启/关闭声音
     connect(ui->checkBox,&QCheckBox::stateChanged,[this](int state){
@@ -96,9 +101,17 @@ void Widget::on_pushButton_2_clicked()
 
 void Widget::closeEvent(QCloseEvent *event)
 {
-    if(videoWidget!=NULL)
+    if(QMessageBox::information(this,"提示","关闭该界面后动态壁纸也会随之消失,是否继续？",QMessageBox::Ok|QMessageBox::Cancel)==QMessageBox::Cancel)
     {
-        videoWidget->close();
+        event->ignore();
+    }
+    else
+    {
+        event->accept();
+        if(videoWidget!=NULL)
+        {
+            videoWidget->close();
+        }
     }
 }
 
@@ -106,5 +119,12 @@ void Widget::on_pushButton_3_clicked()
 {
     videoWidget->close();
     delete videoWidget;
+    videoWidget=NULL;
     playlist->clear();
+}
+
+
+void Widget::on_horizontalSlider_valueChanged(int value)
+{
+    play->setVolume(value);
 }
